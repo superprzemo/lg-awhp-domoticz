@@ -160,6 +160,20 @@ class ACOp(enum.Enum):
     LEFT_ON = "@AC_MAIN_OPERATION_LEFT_ON_W"  # Left fan only.
     ALL_ON = "@AC_MAIN_OPERATION_ALL_ON_W"  # Both fans (or only fan) on.
 
+	
+class ACAWHPswitch(enum.Enum):  # przelacznik woda/powietrze  -switch  water/air
+    
+
+    AIR = "@AIR"  #kontrola zadanej temperatury pokoju
+    WATER = "@WATER"  #kontrola zadanej temperatury wody
+    
+class ACAWHPSilent(enum.Enum):  # przelacznik trybu silent - silent mode (not working only read status)
+    
+
+    OFF = "0"  #tryb silnet wyłączony  - silent mode OFF
+    ON = "1"  #tryb silent włączony    -silent mode ON
+
+	
 
 class ACDevice(Device):
     """Higher-level operations on an AC/HVAC device, such as a heat
@@ -326,6 +340,12 @@ class ACDevice(Device):
         op_value = self.model.enum_value("airState.operation", op.value)
         self._set_control("airState.operation", op_value, command="Operation")
 
+    def set_tryb(self, mode):
+        
+
+        tryb_value = self.model.enum_value("support.airState.miscFuncState.awhpTempSwitch", tryb.value)
+        self._set_control("support.airState.miscFuncState.awhpTempSwitch", tryb_value)		
+
     def get_filter_state(self):
         """Get information about the filter."""
 
@@ -463,7 +483,7 @@ class ACStatus(object):
     @property
     def out_water_cur_f(self):
         return self.ac.c2f[self.out_water_cur_c]
-        
+		
 
     @property
     def mode(self):
@@ -485,6 +505,19 @@ class ACStatus(object):
     def vert_swing(self):
         return ACVSwingMode(
             lookup_enum("airState.wDir.vStep", self.data, self.ac)
+        )
+		
+    @property
+    def awhp_switch(self):
+        return ACAWHPswitch(
+            lookup_enum("airState.miscFuncState.awhpTempSwitch", self.data, self.ac)
+        )
+        
+        
+    @property
+    def awhp_silent(self):
+        return ACAWHPSilent(
+            lookup_enum("airState.miscFuncState.silentAWHP", self.data, self.ac)
         )
 
     @property
