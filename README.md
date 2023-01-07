@@ -20,7 +20,7 @@ Installation
 1. Clone plugin to your domoticz
 
        cd /home/pi/domoticz/plugins
-       git clone https://github.com/majki09/domoticz_lg_thinq_plugin.git
+       git clone https://github.com/superprzemo/lg-awhp-domoticz.git
        cd ./domoticz_lg_thinq_plugin
 
 2. Login and get your token. Put your own country and language codes.
